@@ -11,5 +11,5 @@ In order to make the server run make sure you are in thhe folder and type in "np
 To get the status of the server simply add "/status". SO something like http://localhost:3000/status.
 
 Current Project Status
-- Node.js, Express.js installed and implemented in folder
+- Node.js and Express.js are installed and configured in the project.
 - Core API structure and server setup are completed.
