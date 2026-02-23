@@ -53,7 +53,7 @@ CREATE TABLE reservations (
  
   CONSTRAINT fk_reservations_resources
     FOREIGN KEY (resource_id) REFERENCES resources(resource_id)
-    ON DELETE CASCADE
+    ON DELETE CASCADE,
 
 -- Constraint to prevent bad data: end_time must be after start_time
   CONSTRAINT chk_end_after_start CHECK (end_time > start_time)
