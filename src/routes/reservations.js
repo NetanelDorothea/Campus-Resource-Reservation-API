@@ -10,6 +10,11 @@ router.get('/', async (req, res) => {
  
 router.post('/', validate(['user_id', 'resource_id', 'start_time', 'end_time']), async (req, res) => {
   const { user_id, resource_id, start_time, end_time } = req.body;
+
+  // Rule: Reservations must have an end time after the start time
+  if (new Date(end_time) <= new Date(start_time)) {
+    return res.status(400).json({ error: "End time must be after start time" });
+  }
  
   const [result] = await db.query(
     `INSERT INTO reservations (user_id, resource_id, start_time, end_time)

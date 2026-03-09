@@ -8,8 +8,13 @@ router.get('/', async (req, res) => {
   res.json(rows);
 });
  
-router.post('/', validate(['full_name', 'eresource_type']), async (req, res) => {
+router.post('/', validate(['resource_name', 'resource_type']), async (req, res) => {
   const { resource_name, resource_type, location } = req.body;
+
+  // Rule: Users cannot reserve nonexistent resources
+  if (!resource_type) {
+    return res.status(400).json({ error: "Cannot reserve nonexistent resources" });
+  }
  
   const [result] = await db.query(
     'INSERT INTO resources (resource_name, resource_type, location) VALUES (?, ?, ?)',
