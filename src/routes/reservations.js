@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const validate = require('../middleware/validateRequest');
  
 router.get('/', async (req, res) => {
   const [rows] = await db.query('SELECT * FROM reservations');
   res.json(rows);
 });
  
-router.post('/', async (req, res) => {
+router.post('/', validate(['user_id', 'resource_id', 'start_time', 'end_time']), async (req, res) => {
   const { user_id, resource_id, start_time, end_time } = req.body;
  
   const [result] = await db.query(
