@@ -3,8 +3,8 @@ const express = require('express');
 const usersRoutes = require('./routes/users');
 const resourcesRoutes = require('./routes/resources');
 const reservationsRoutes = require('./routes/reservations');
-const errorHandler = require('./middleware/errorHandler');
 const authRoutes = require('./routes/auth')
+const errorHandler = require('./middleware/errorHandler');
  
 const app = express();
  

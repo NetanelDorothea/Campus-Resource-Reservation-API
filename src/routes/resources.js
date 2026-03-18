@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
   res.json(rows);
 });
  
-router.post('/', auth, requiredRole('admin'), validate(['resource_name', 'resource_type']), async (req, res) => {
+router.post('/', auth, requiredRole('admin'), validate(['resource_name', 'resource_type', 'location']), async (req, res) => {
   const { resource_name, resource_type, location } = req.body;
 
   // Rule: Users cannot reserve nonexistent resources
