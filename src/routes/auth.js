@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const validate = require('../middleware/validateRequest');
+const auth = require('../middleware/authMiddleware');
 const bcrypt = require('bcrypt');
  
 
@@ -30,7 +31,7 @@ router.post('/register', validate(['full_name', 'email', 'password']), async (re
 // -- ---------------------------------------------------
 // -- Login
 // -- ---------------------------------------------------
-router.post('/login', validate(['email', 'password']), async (req, res) => {
+router.post('/login', auth(['email', 'password']), async (req, res) => {
   const { email, password } = req.body;
 
   const [rows] = await db.query(
@@ -51,6 +52,7 @@ router.post('/login', validate(['email', 'password']), async (req, res) => {
  
   res.json({
     message: 'Login successful',
+    token: 'your_secret_key',
     user: user
   });
 });

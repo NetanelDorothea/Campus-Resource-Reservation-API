@@ -2,13 +2,15 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const validate = require('../middleware/validateRequest');
+const auth = require('../middleware/authMiddleware');
+const requiredRole = require('../middleware/roleMiddleware');
  
 router.get('/', async (req, res) => {
   const [rows] = await db.query('SELECT * FROM resources');
   res.json(rows);
 });
  
-router.post('/', validate(['resource_name', 'resource_type']), async (req, res) => {
+router.post('/', auth, requiredRole('admin'), validate(['resource_name', 'resource_type']), async (req, res) => {
   const { resource_name, resource_type, location } = req.body;
 
   // Rule: Users cannot reserve nonexistent resources
@@ -22,6 +24,8 @@ router.post('/', validate(['resource_name', 'resource_type']), async (req, res) 
   );
  
   res.status(201).json({ resource_id: result.insertId });
-});
+  }
+);
+
  
 module.exports = router;

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const auth = require('../middleware/authMiddleware');
 const validate = require('../middleware/validateRequest');
  
 router.get('/', async (req, res) => {
@@ -8,7 +9,7 @@ router.get('/', async (req, res) => {
   res.json(rows);
 });
  
-router.post('/', validate(['user_id', 'resource_id', 'start_time', 'end_time']), async (req, res) => {
+router.post('/', auth, validate(['user_id', 'resource_id', 'start_time', 'end_time']), async (req, res) => {
   const { user_id, resource_id, start_time, end_time } = req.body;
 
   // Rule: Reservations must have an end time after the start time
