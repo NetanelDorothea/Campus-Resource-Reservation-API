@@ -78,3 +78,6 @@ INSERT INTO resources (resource_name, resource_type, location) VALUES
  
 INSERT INTO reservations (user_id, resource_id, start_time, end_time, status) VALUES
 (1, 1, '2026-02-01 10:00:00', '2026-02-01 11:00:00', 'active');
+
+-- If your database already exists, update it with an ALTER statement.
+ALTER TABLE users MODIFY role VARCHAR(30) DEFAULT 'user';
