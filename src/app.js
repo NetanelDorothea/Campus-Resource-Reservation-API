@@ -20,5 +20,3 @@ app.use('/api/reservations', reservationsRoutes);
 app.use(errorHandler);
  
 module.exports = app;
-
- 
