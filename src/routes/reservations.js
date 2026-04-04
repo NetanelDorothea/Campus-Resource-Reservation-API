@@ -17,6 +17,10 @@ router.post('/', auth, validate(['user_id', 'resource_id', 'start_time', 'end_ti
   try{
     const { user_id, resource_id, start_time, end_time } = req.body;
 
+    if (!req.body.start_time) {
+      return res.status(400).json({ error: 'start_time is required' });
+    } 
+
     // Rule: Reservations must have an end time after the start time
     if (new Date(end_time) <= new Date(start_time)) {
       return res.status(400).json({ error: "End time must be after start time" });
@@ -29,7 +33,7 @@ router.post('/', auth, validate(['user_id', 'resource_id', 'start_time', 'end_ti
     );
   
     res.status(201).json({ reservation_id: result.insertId });
-  } catch {
+  } catch (err){
     next(err);
   }
 });
