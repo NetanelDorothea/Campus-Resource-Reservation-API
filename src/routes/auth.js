@@ -70,7 +70,7 @@ router.post('/login', validate(['email', 'password']), async (req, res, next) =>
 });
 
 async function findUserByEmail(email) {
-  const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+  const [rows] = await db.query('SELECT user_id, full_name, email, password, role FROM users WHERE email = ?', [email]);
   return rows[0];
 }
 

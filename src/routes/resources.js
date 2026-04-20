@@ -6,7 +6,7 @@ const auth = require('../middleware/authMiddleware');
 const requiredRole = require('../middleware/roleMiddleware');
  
 router.get('/', async (req, res) => {
-  const [resources] = await db.query('SELECT * FROM resources');
+  const [resources] = await db.query('SELECT resource_id, resource_name, resource_type, location FROM resources');
   res.json(resources);
 });
  

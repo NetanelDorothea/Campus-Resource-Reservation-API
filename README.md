@@ -21,4 +21,3 @@ Refinement and Optimization
 - in reservation.js removed reduntant code if (!req.body.start_time) {return res.status(400).json({ error: 'start_time is required' });} because its already validated before it reaches that code
 - in resources.js removed redundant code "if (!resource_type) {return res.status(400).json({error:"Resource does not exist" });}" because validate already ensures the field exists  
 - improved middleware usage in auth.js by removing redundant const auth = require('../middleware/authMiddleware');
-- 

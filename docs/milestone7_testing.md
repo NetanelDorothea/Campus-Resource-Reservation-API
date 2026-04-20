@@ -1,0 +1,1 @@
+In auth.js changed query so it returns only needed fields from queries to make it slightly faster, more scalable and safer by avoiding exposing sensitive or unnecessary fields. Same is done in resources.js. 
