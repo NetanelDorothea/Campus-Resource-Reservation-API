@@ -6,8 +6,8 @@ const auth = require('../middleware/authMiddleware');
 const requiredRole = require('../middleware/roleMiddleware');
  
 router.get('/', async (req, res) => {
-  const [rows] = await db.query('SELECT * FROM resources');
-  res.json(rows);
+  const [resources] = await db.query('SELECT * FROM resources');
+  res.json(resources);
 });
  
 router.post('/', auth, requiredRole('admin'), validate(['resource_name', 'resource_type', 'location']), async (req, res) => {
@@ -15,7 +15,7 @@ router.post('/', auth, requiredRole('admin'), validate(['resource_name', 'resour
 
   // Rule: Users cannot reserve nonexistent resources
   if (!resource_type) {
-    return res.status(400).json({ error: "Cannot reserve nonexistent resources" });
+    return res.status(400).json({ error: "Resource does not exist" });
   }
  
   const [result] = await db.query(

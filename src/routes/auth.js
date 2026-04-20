@@ -4,7 +4,7 @@ const db = require('../db');
 const validate = require('../middleware/validateRequest');
 const auth = require('../middleware/authMiddleware');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken'); // make sure to require at the top
+const jwt = require('jsonwebtoken'); 
  
 
 // -- ---------------------------------------------------
@@ -15,8 +15,8 @@ router.post('/register', validate(['full_name', 'email', 'password']), async (re
     const { full_name, email, password} = req.body;
 
     // Rule: Email already registered.
-    const [existing] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
-    if (existing.length > 0) {
+    const user = await findUserByEmail(email);
+    if (user) {
       return res.status(400).json({ error: 'Email already registered' });
     }
 
@@ -42,23 +42,18 @@ router.post('/register', validate(['full_name', 'email', 'password']), async (re
 // -- ---------------------------------------------------
 // -- Login
 // -- ---------------------------------------------------
-router.post('/login', validate(['email', 'password']), async (req, res) => {
+router.post('/login', validate(['email', 'password']), async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    const [rows] = await db.query(
-      'SELECT * FROM users where email = ?', [email]
-    );
-
-    if (rows.length === 0) {
+    const user = await findUserByEmail(email);
+    if (!user) {
       return res.status(400).json({ error: 'User not found' });
     }
 
-    const user = rows[0]
-
-    const valid = await bcrypt.compare(password, user.password);
+    const validPassword = await bcrypt.compare(password, user.password);
   
-    if (!valid) {
+    if (!validPassword) {
       return res.status(400).json({ error: 'Invalid password' });
     }
 
@@ -73,5 +68,10 @@ router.post('/login', validate(['email', 'password']), async (req, res) => {
     next(err);
   }
 });
+
+async function findUserByEmail(email) {
+  const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+  return rows[0];
+}
 
 module.exports = router;

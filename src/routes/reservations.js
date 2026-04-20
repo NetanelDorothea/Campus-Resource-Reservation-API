@@ -6,8 +6,8 @@ const validate = require('../middleware/validateRequest');
  
 router.get('/', async (req, res, next) => {
   try {
-    const [rows] = await db.query('SELECT * FROM reservations');
-    res.json(rows);
+    const [reservations] = await db.query('SELECT * FROM reservations');
+    res.json(reservations);
   } catch (err) {
     next(err);
   }
@@ -15,14 +15,10 @@ router.get('/', async (req, res, next) => {
  
 router.post('/', auth, validate(['user_id', 'resource_id', 'start_time', 'end_time']), async (req, res, next) => {
   try{
-    const { user_id, resource_id, start_time, end_time } = req.body;
-
-    if (!req.body.start_time) {
-      return res.status(400).json({ error: 'start_time is required' });
-    } 
+    const { user_id, resource_id, start_time, end_time } = req.body;  
 
     // Rule: Reservations must have an end time after the start time
-    if (new Date(end_time) <= new Date(start_time)) {
+    if (isInvalidTimeRange(start_time, end_time)) {
       return res.status(400).json({ error: "End time must be after start time" });
     }
   
@@ -37,5 +33,9 @@ router.post('/', auth, validate(['user_id', 'resource_id', 'start_time', 'end_ti
     next(err);
   }
 });
+
+function isInvalidTimeRange(start, end) {
+  return new Date(end) <= new Date(start);
+}
  
 module.exports = router;
